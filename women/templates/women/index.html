@@ -2,16 +2,14 @@
 
 
 {% block content %}
-            {% for women in womens %}
-                <div class="block_women">
-                    <h3>{{ women.title }}</h3>
-                    <p>{{ women.content|linebreaks|truncatewords:50 }}</p>
-                    {% if women.photo %}
-                        <img class="w-50" src="{{ women.photo.url }}">
-                    {% endif %}
-                    <a class="btn btn-info" href="{{ women.get_absolute_url }}">Подробнее</a>
-                </div>
-            {% endfor %}
-
-
+    {% for women in womens %}
+        <div class="block_women">
+            <h3>{{ women.title }}</h3>
+            <p>{{ women.content|linebreaks|truncatewords:50 }}</p>
+            {% if women.photo %}
+                <img class="w-50" src="{{ women.photo.url }}">
+            {% endif %}
+            <a class="btn btn-info" href="{{ women.get_absolute_url }}">Подробнее</a>
+        </div>
+    {% endfor %}
 {% endblock %}

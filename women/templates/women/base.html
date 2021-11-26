@@ -1,5 +1,7 @@
 {% load static %}
 {% load women_tags %}
+{% load cache %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +9,6 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link type="text/css"
     <link type="text/css" href="{% static 'women/css/style.css' %}" rel="stylesheet"/>
     </link>
 </head>
@@ -19,15 +20,49 @@
     <div class="row">
         <div class="col-2 bc1">
             {% if cat_selected == 0 %}
-                <li class="selected">Все категории</li>
+                <li>Все категории</li>
             {% else %}
                 <li><a href="{% url 'home' %}">Все категории</a></li>
             {% endif %}
-            {% show_categories '-name' cat_selected %}
+            {% for c in cats %}
+                {% if c.pk == cat_selected %}
+                    <li>{{ c.name }}</li>
+                {% else %}
+                    <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+                {% endif %}
+            {% endfor %}
         </div>
         <div class="col-10 bc2">
             {% block content %}
             {% endblock %}
+
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a>
+                            </li>
+                        {% endif %}
+                        {% for p in paginator.page_range %}
+                            {% if page_obj.number == p %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">{{ p }}</a>
+                                </li>
+                            {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
         </div>
     </div>
 </div>

@@ -11,7 +11,12 @@
     <li class="nav-item">
         <a class="nav-link" href="{% url 'contact' %}">Обратная связь</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'login' %}">Войти</a>
-    </li>
+    {% if ip.user.is_authenticated %}
+        <li class="nav-item"> {{ ip.username }} <a class="nav-link" href="{% url 'logout' %}">Выйти</a></li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">Регистрация {{ ip.user.username }}</a>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Войти</a></li>
+    {% endif %}
 </ul>
